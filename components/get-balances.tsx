@@ -3,6 +3,7 @@
 import { useBalance, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
 import { shortenAddress } from "@/lib/common";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 export const FIXED_ADDRESS =
   "0x108e41248841d0c0d2303222324fF21C3ca88d73" as `0x${string}`; // Replace with your address
@@ -86,7 +87,7 @@ export default function Balances({ chainId }: { chainId: number }) {
 
   return (
     <div>
-      <p>
+      <p className=" flex items-center gap-1">
         Address:{" "}
         <a
           href={
@@ -106,8 +107,9 @@ export default function Balances({ chainId }: { chainId: number }) {
           }
           target="_blank"
           rel="noopener noreferrer"
+          className=" flex hover:underline text-blue-500 items-center"
         >
-          {shortenAddress(FIXED_ADDRESS)}
+          {shortenAddress(FIXED_ADDRESS)}<SquareArrowOutUpRight className="w-4 h-4 ml-1" />
         </a>
       </p>
       {ethLoading && <p>Loading...</p>}
