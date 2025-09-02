@@ -86,7 +86,30 @@ export default function Balances({ chainId }: { chainId: number }) {
 
   return (
     <div>
-      <p>Address: {shortenAddress(FIXED_ADDRESS)}</p>
+      <p>
+        Address:{" "}
+        <a
+          href={
+            chainId === 84532 // Base Sepolia
+              ? `https://sepolia.basescan.org/address/${FIXED_ADDRESS}`
+              : chainId === 421614 // Arbitrum Sepolia
+              ? `https://sepolia.arbiscan.io/address/${FIXED_ADDRESS}`
+              : chainId === 1
+              ? `https://etherscan.io/address/${FIXED_ADDRESS}`
+              : chainId === 137
+              ? `https://polygonscan.com/address/${FIXED_ADDRESS}`
+              : chainId === 10
+              ? `https://optimistic.etherscan.io/address/${FIXED_ADDRESS}`
+              : chainId === 42161
+              ? `https://arbiscan.io/address/${FIXED_ADDRESS}`
+              : `https://etherscan.io/address/${FIXED_ADDRESS}`
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {shortenAddress(FIXED_ADDRESS)}
+        </a>
+      </p>
       {ethLoading && <p>Loading...</p>}
       {ethError && (
         <p style={{ color: "red" }}>ETH Error: {ethError.message}</p>

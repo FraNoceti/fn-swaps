@@ -104,20 +104,57 @@ export default function Home() {
             {/* New div for Arbitrum Sepolia swap info */}
           </div>
         </div>
-        <div className="bg-gray-300 py-6 px-10 rounded-3xl flex flex-col gap-4 items-center">
-          <p>
-            Swap 1 USDC to ETH on Base Sepolia and bridge to Arbitrium Sepolia
-          </p>
-          <button
-            className="py-2 px-4 rounded-3xl bg-amber-500 text-white hover:text-black hover:bg-amber-300 font-bold transition-all active:scale-95 disabled:bg-gray-400 disabled:text-white disabled:cursor-not-allowed"
-            onClick={handleSwap}
-            disabled={isLoading}>
-            {isLoading ? "Swapping..." : "Swap & Bridge"}
-          </button>
+        <div>
+          <div className="bg-gray-300 py-6 px-10 rounded-3xl flex flex-col gap-4 items-center">
+            <p>
+              Swap 1 USDC to ETH on Base Sepolia <br className=" lg:hidden" />{" "}
+              and bridge to Arbitrium Sepolia
+            </p>
+            <button
+              className="py-2 px-4 rounded-3xl bg-amber-500 text-white hover:text-black hover:bg-amber-300 font-bold transition-all active:scale-95 disabled:bg-gray-400 disabled:text-white disabled:cursor-not-allowed border-amber-500 border-2"
+              onClick={handleSwap}
+              disabled={isLoading}>
+              {isLoading ? "Swapping..." : "Swap & Bridge"}
+            </button>
+          </div>
+          <div className="text-gray-500 text-sm flex flex-wrap gap-2 justify-center items-center">
+            Powered by{" "}
+            <a
+              href="https://swaps.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-blue-600">
+              Swaps.xyz
+            </a>
+            ,{" "}
+            <a
+              href="https://wagmi.sh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-blue-600">
+              Wagmi
+            </a>
+            ,{" "}
+            <a
+              href="https://viem.sh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-blue-600">
+              Viem
+            </a>{" "}
+            &amp;{" "}
+            <a
+              href="https://nextjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-blue-600">
+              Next.js
+            </a>
+          </div>
         </div>
         <div>
           {txHash.res && (
-            <div className=" flex gap-6">
+            <div className=" flex flex-col-reverse lg:flex-row gap-6">
               <div className="flex flex-col gap-2 text-sm text-gray-600 mt-2 shrink-0">
                 <p>
                   <strong>Source Token:</strong> USDC (
@@ -183,7 +220,7 @@ export default function Home() {
                         ? `Please give me a Valid API Key, the one I'm using is not working`
                         : ""}
                     </p>
-                    <p className=" w-[300px]">
+                    <p className=" w-[250px]">
                       {JSON.stringify(txHash.res.error)
                         ? "As we can tell even if the error is happening the backend is still inscribing an empty transaction on the Base Sepolia chain, which is diminuishing each time the amount of ETH in the Base token!"
                         : ""}
