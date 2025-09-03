@@ -2,9 +2,10 @@
 import { config } from "@/providers/providers";
 import { sendTransaction, estimateGas } from "@wagmi/core";
 import { privateKeyToAccount } from "viem/accounts";
+import { useAccount } from "wagmi";
 
- // Ensure PRIVATE_KEY is set
-const account = privateKeyToAccount(
+// Ensure PRIVATE_KEY is set
+const accountFixed = privateKeyToAccount(
   process.env.NEXT_PUBLIC_PRIVATE_KEY as `0x${string}`
 );
 
@@ -44,9 +45,12 @@ async function getAction({
 
 export async function broadcastOnEvm({
   actionRequest,
+  accountConnected,
 }: {
   actionRequest: any;
+  accountConnected?: ReturnType<typeof useAccount>;
 }): Promise<any> {
+  const account = accountConnected ? accountConnected : accountFixed;
   // Get the account address from actionRequest.sender or another appropriate field
   const { tx, ...res } = await getAction({ actionRequest });
   const gas = await estimateGas(config, { account, ...tx });
@@ -57,5 +61,5 @@ export async function broadcastOnEvm({
     gas,
   });
 
-  return { ...res, txHash, tx, gas};
+  return { ...res, txHash, tx, gas };
 }
