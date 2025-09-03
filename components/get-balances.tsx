@@ -86,8 +86,8 @@ export default function Balances({ chainId }: { chainId: number }) {
   });
 
   return (
-    <div>
-      <p className=" flex items-center gap-1">
+    <div className=" text-center">
+      <p className=" flex items-center justify-center gap-1">
         Address:{" "}
         <a
           href={
@@ -107,7 +107,7 @@ export default function Balances({ chainId }: { chainId: number }) {
           }
           target="_blank"
           rel="noopener noreferrer"
-          className=" flex hover:underline text-blue-500 items-center"
+          className=" flex hover:underline text-blue-500 items-center justify-center "
         >
           {shortenAddress(FIXED_ADDRESS)}<SquareArrowOutUpRight className="w-4 h-4 ml-1" />
         </a>
