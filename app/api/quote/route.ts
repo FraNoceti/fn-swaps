@@ -1,5 +1,7 @@
+// Server-side proxy for the 1inch quote API.
+// Browsers can't call 1inch directly due to CORS restrictions, so this route
+// forwards the request from our Next.js server and relays the response back.
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// app/api/quote/route.ts
 import { NextResponse } from "next/server";
 
 const ONEINCH_BASE = "https://api.1inch.io/v5.0";

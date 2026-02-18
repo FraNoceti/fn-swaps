@@ -1,3 +1,6 @@
+// Dynamic swap page — users connect MetaMask, pick source/destination chains and tokens,
+// enter an amount, and execute a cross-chain swap via broadcastOnEvm.
+// Supports multiple mainnets and testnets with real-time balance display.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -18,7 +21,6 @@ import {
 import { useRefetchBalances } from "@/hooks/refetch-balances";
 import { ethers } from "ethers";
 import { broadcastOnEvm } from "@/hooks/swap";
-// Make sure this is your correct import
 
 const ETH_ZERO = "0x0000000000000000000000000000000000000000" as `0x${string}`;
 
@@ -104,7 +106,7 @@ export default function SwapPage() {
     setTxHash({ txHash: null, res: undefined });
 
     // populate action request dynamically
-    const axctionRequestB2A = {
+    const actionRequestB2A = {
       actionType: "swap-action",
       sender: address,
       srcToken:
@@ -121,7 +123,7 @@ export default function SwapPage() {
 
     try {
       const { txHash, tx, gas, ...res } = await broadcastOnEvm({
-        actionRequest: axctionRequestB2A,
+        actionRequest: actionRequestB2A,
         accountConnected: account,
       });
       console.log(

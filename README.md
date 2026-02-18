@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# fn-swaps
 
-## Getting Started
+A cross-chain swap and bridge demo app built with Next.js. Uses the [Swaps.xyz](https://swaps.xyz) API to execute token swaps and bridges across EVM chains, with [Wagmi](https://wagmi.sh) and [Viem](https://viem.sh) for wallet and transaction management.
 
-First, run the development server:
+**Live demo:** [fn-swaps.vercel.app](https://fn-swaps.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech Stack
+
+- **Next.js 15** (App Router, Turbopack)
+- **React 19**
+- **Wagmi v2** + **Viem** — wallet connection, transaction sending, on-chain reads
+- **TanStack React Query** — caching and refetching on-chain data
+- **Swaps.xyz API** — cross-chain swap/bridge routing
+- **Ethers.js v6** — amount parsing/formatting on the dynamic swap page
+- **shadcn/ui** + **Tailwind CSS v4** — UI components and styling
+
+## Project Structure
+
+```
+app/
+  page.tsx              # Preset swap page (hardcoded USDC → WETH, Base Sepolia → Arbitrum Sepolia)
+  swap/page.tsx         # Dynamic swap page (MetaMask-connected, user-configurable)
+  api/quote/route.ts    # Server-side proxy for 1inch quote API (avoids browser CORS)
+  layout.tsx            # Root layout with providers
+components/
+  get-balances.tsx      # ERC-20 and native token balance display component
+  ui/                   # shadcn/ui components (button, card, input, select, etc.)
+hooks/
+  swap.ts               # Core swap logic: calls Swaps.xyz getAction API, broadcasts tx
+  refetch-balances.ts   # Invalidates cached balance queries after a swap
+lib/
+  common.ts             # Shared utilities (address shortening, etc.)
+providers/
+  providers.tsx         # Wagmi + React Query provider setup with multi-chain config
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file in the project root:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+NEXT_PUBLIC_SWAPS_API_KEY=your_swaps_xyz_api_key
+NEXT_PUBLIC_PRIVATE_KEY=your_wallet_private_key   # Used by the preset swap page
+```
 
-## Learn More
+- `NEXT_PUBLIC_SWAPS_API_KEY` — API key from [Swaps.xyz](https://swaps.xyz)
+- `NEXT_PUBLIC_PRIVATE_KEY` — Private key for the hardcoded wallet on the preset swap page (testnet only)
 
-To learn more about Next.js, take a look at the following resources:
+## Setup & Run
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-## Deploy on Vercel
+## Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### `/` — Preset Swap
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+A one-click demo that swaps 1 USDC on Base Sepolia to WETH on Arbitrum Sepolia using a hardcoded wallet. Shows source/destination chain balances and transaction details after execution.
+
+### `/swap` — Dynamic Swap
+
+A full swap interface where users connect MetaMask, pick source/destination chains and tokens (ETH/WETH), enter an amount, and execute the swap. Supports multiple mainnets and testnets.

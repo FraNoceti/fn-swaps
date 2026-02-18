@@ -1,3 +1,8 @@
+// Wagmi + React Query provider setup.
+// Configures all supported chains (mainnets + testnets) with their RPC transports,
+// then wraps the app in WagmiProvider and QueryClientProvider so any component
+// can use Wagmi hooks (useBalance, useReadContract, etc.) and benefit from
+// React Query's caching/invalidation.
 "use client";
 
 import type { ReactNode } from "react";
@@ -15,7 +20,7 @@ import {
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// --- List all chains your app supports ---
+// All chains the app supports — both mainnets and testnets
 const chains = [
   mainnet,
   arbitrum,

@@ -1,3 +1,7 @@
+// Displays native ETH and ERC-20 token balances for a fixed address on a given chain.
+// Uses Wagmi's useBalance for native balance and useReadContract for direct ERC-20
+// balanceOf/decimals calls, so each token balance is an independent cached query
+// that can be selectively invalidated after swaps.
 "use client";
 
 import { useBalance, useReadContract } from "wagmi";

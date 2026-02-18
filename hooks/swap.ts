@@ -4,24 +4,20 @@ import { sendTransaction, estimateGas } from "@wagmi/core";
 import { privateKeyToAccount } from "viem/accounts";
 import { useAccount } from "wagmi";
 
-// Ensure PRIVATE_KEY is set
-const accountFixed = privateKeyToAccount(
-  process.env.NEXT_PUBLIC_PRIVATE_KEY as `0x${string}`
-);
+// Fixed account derived from env — used by the preset swap page (no wallet connection needed).
+// Lazy-init to avoid crashing at build time when the env var isn't set.
+let accountFixed: ReturnType<typeof privateKeyToAccount> | null = null;
+function getAccountFixed() {
+  if (!accountFixed) {
+    accountFixed = privateKeyToAccount(
+      process.env.NEXT_PUBLIC_PRIVATE_KEY as `0x${string}`
+    );
+  }
+  return accountFixed;
+}
 
-// const actionRequest = {
-//   actionType: "swap-action",
-//   sender: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045", // generally the user's connected wallet address
-//   srcToken: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC on Base
-//   dstToken: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", // USDT on Arbitrum
-//   srcChainId: 8453, // Base Chain ID
-//   dstChainId: 42161, // Arbitrum Chain ID
-//   slippage: 100, // bps
-//   swapDirection: "exact-amount-in",
-//   amount: 10000000n, // denominated in srcToken decimals
-//   recipient: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
-// };
-
+// Calls the Swaps.xyz getAction API with the given action request params.
+// Returns the unsigned transaction (`tx`) along with route/quote metadata.
 async function getAction({
   actionRequest,
 }: {
@@ -43,6 +39,8 @@ async function getAction({
   return await response.json();
 }
 
+// Fetches a swap route via getAction, estimates gas, and broadcasts the transaction.
+// Uses the connected wallet account if provided, otherwise falls back to the fixed account.
 export async function broadcastOnEvm({
   actionRequest,
   accountConnected,
@@ -50,8 +48,7 @@ export async function broadcastOnEvm({
   actionRequest: any;
   accountConnected?: ReturnType<typeof useAccount>;
 }): Promise<any> {
-  const account = accountConnected ? accountConnected : accountFixed;
-  // Get the account address from actionRequest.sender or another appropriate field
+  const account = accountConnected ? accountConnected : getAccountFixed();
   const { tx, ...res } = await getAction({ actionRequest });
   const gas = await estimateGas(config, { account, ...tx });
 

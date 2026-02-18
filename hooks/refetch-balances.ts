@@ -1,18 +1,20 @@
-// lib/refetchBalances.ts
+// hooks/refetch-balances.ts
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { getBalanceQueryOptions, readContractQueryOptions } from "wagmi/query";
-import { config } from "@/providers/providers"; // Your Wagmi config with baseSepolia, arbitrumSepolia
+import { config } from "@/providers/providers";
 import {
   ERC20_ABI,
   FIXED_ADDRESS,
   TOKEN_CONTRACTS,
-} from "@/components/get-balances"; // Your constants
+} from "@/components/get-balances";
 
-// Derive chain IDs from config
-type ChainId = typeof config.chains[number]["id"]; // 84532 | 421614
+type ChainId = typeof config.chains[number]["id"];
 
+// Returns a function that invalidates all cached balance queries (native ETH + ERC-20 tokens).
+// Call after a swap completes so the UI reflects updated balances without a full page reload.
+// Can target a single chain or invalidate across all configured chains.
 export function useRefetchBalances() {
   const queryClient = useQueryClient();
 

@@ -1,3 +1,6 @@
+// Preset swap page — one-click demo that swaps 1 USDC (Base Sepolia) → WETH (Arbitrum Sepolia)
+// using a hardcoded wallet (no MetaMask needed). Shows balances on both chains and
+// displays transaction details in a collapsible section after execution.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -22,7 +25,8 @@ import {
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 
-const axctionRequestB2A = {
+// Hardcoded action request: 1 USDC on Base Sepolia → WETH on Arbitrum Sepolia
+const actionRequestB2A = {
   actionType: "swap-action",
   sender: "0x108e41248841d0c0d2303222324fF21C3ca88d73",
   srcToken: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
@@ -43,7 +47,7 @@ const getChainName = (chainId: number) => {
     case 84532:
       return "Base Sepolia";
     case 421614:
-      return "Arbitrium Sepolia";
+      return "Arbitrum Sepolia";
     default:
       return `Chain ID ${chainId}`;
   }
@@ -63,7 +67,7 @@ export default function Home() {
     setTxHash({ txHash: null, res: undefined });
     try {
       const { txHash, tx, gas, ...res } = await broadcastOnEvm({
-        actionRequest: axctionRequestB2A,
+        actionRequest: actionRequestB2A,
       });
       setTxHash({ txHash, res });
       setIsLoading(false);
@@ -83,7 +87,7 @@ export default function Home() {
           <CardDescription className=" flex items-center gap-2 justify-center">
             Presetted wallet:{" "}
             <Badge variant="secondary">
-              {shortenAddress(axctionRequestB2A.sender)}
+              {shortenAddress(actionRequestB2A.sender)}
             </Badge>
           </CardDescription>
         </CardHeader>
@@ -92,22 +96,22 @@ export default function Home() {
           <Card className="bg-gray-800 rounded-xl p-4 gap-2 text-center text-white">
             <CardTitle className="text-xl mb-2">Source Chain</CardTitle>
             <CardDescription className="text-white text-xl">
-              {getChainName(axctionRequestB2A.srcChainId)}
+              {getChainName(actionRequestB2A.srcChainId)}
             </CardDescription>
             <div className="mt-3">
               <p className="text-gray-400">Balances</p>
-              <Balances chainId={axctionRequestB2A.srcChainId} />
+              <Balances chainId={actionRequestB2A.srcChainId} />
             </div>
           </Card>
 
           <Card className="bg-gray-800 rounded-xl p-4 gap-2 text-center text-white">
             <CardTitle className="text-xl mb-2">Destination Chain</CardTitle>
             <CardDescription className="text-white text-xl">
-              {getChainName(axctionRequestB2A.dstChainId)}
+              {getChainName(actionRequestB2A.dstChainId)}
             </CardDescription>
             <div className="mt-3">
               <p className="text-gray-400">Balances</p>
-              <Balances chainId={axctionRequestB2A.dstChainId} />
+              <Balances chainId={actionRequestB2A.dstChainId} />
             </div>
           </Card>
         </CardContent>
@@ -163,37 +167,37 @@ export default function Home() {
             <CollapsibleContent className="bg-gray-800 p-4 mt-2 rounded-xl flex flex-col gap-2">
               <p>
                 <strong>Source Token:</strong> USDC (
-                {shortenAddress(axctionRequestB2A.srcToken)})
+                {shortenAddress(actionRequestB2A.srcToken)})
               </p>
               <p>
                 <strong>Amount:</strong>{" "}
-                {formatTokenAmount(axctionRequestB2A.amount)} USDC
+                {formatTokenAmount(actionRequestB2A.amount)} USDC
               </p>
               <p>
                 <strong>Chain:</strong>{" "}
-                {getChainName(axctionRequestB2A.srcChainId)}
+                {getChainName(actionRequestB2A.srcChainId)}
               </p>
               <p>
                 <strong>Destination Token:</strong> WETH (
-                {shortenAddress(axctionRequestB2A.dstToken)})
+                {shortenAddress(actionRequestB2A.dstToken)})
               </p>
               <p>
                 <strong>Recipient:</strong>{" "}
-                {shortenAddress(axctionRequestB2A.recipient)}
+                {shortenAddress(actionRequestB2A.recipient)}
               </p>
               <p>
                 <strong>Destination Chain:</strong>{" "}
-                {getChainName(axctionRequestB2A.dstChainId)}
+                {getChainName(actionRequestB2A.dstChainId)}
               </p>
               <p>
-                <strong>Swap Type:</strong> {axctionRequestB2A.actionType}
+                <strong>Swap Type:</strong> {actionRequestB2A.actionType}
               </p>
               <p>
-                <strong>Slippage:</strong> {axctionRequestB2A.slippage / 100}%
+                <strong>Slippage:</strong> {actionRequestB2A.slippage / 100}%
               </p>
               <p>
                 <strong>Swap Direction:</strong>{" "}
-                {axctionRequestB2A.swapDirection}
+                {actionRequestB2A.swapDirection}
               </p>
               <p className="mt-2">
                 <strong>Tx Hash:</strong>{" "}
